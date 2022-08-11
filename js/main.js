@@ -27,38 +27,47 @@
 
   // ボタンの動きに制限をかけるためのコード(制限しないとおかしな動作するので…)
   function setButtonStateInitial() { // スタート時はスタートだけを押せる仕様にする
-    start.disabled = false;
-    stop.disabled = true;
-    reset.disabled = true;
+    start.classList.remove('inactive');
+    stop.classList.add('inactive');
+    reset.classList.add('inactive');
   }
 
   function setButtonStateRunning() { // スタート後ストップだけを押せる仕様にする
-    start.disabled = true;
-    stop.disabled = false;
-    reset.disabled = true;
+    start.classList.add('inactive');
+    stop.classList.remove('inactive');
+    reset.classList.add('inactive');
   }
 
   function setButtonStateStopped() { // ストップの時はストップだけを押せない仕様にする
-    start.disabled = false;
-    stop.disabled = true;
-    reset.disabled = false;
+    start.classList.remove('inactive');
+    stop.classList.add('inactive');
+    reset.classList.remove('inactive');
   }
 
   setButtonStateInitial();
 
   start.addEventListener('click', () => { // クリックしたときの処理(スタート)
+    if (start.classList.contains('inactive') === true) {
+      return;
+    }
     setButtonStateRunning(); 
     startTime = Date.now();
     countUp();
   });
 
   stop.addEventListener('click', () => { // クリックしたときの処理(ストップ)
+    if (stop.classList.contains('inactive') === true) {
+      return;
+    }
     setButtonStateStopped();
     clearTimeout(timeoutId);
     elapsedTime += Date.now() - startTime;
   });
 
   reset.addEventListener('click', () => { // クリックしたときの処理(リセット)
+    if (reset.classList.contains('inactive') === true) {
+      return;
+    }
     setButtonStateInitial();
     timer.textContent = '00:00.000'; // タイマーを元に戻すのでテキストを0表記とする
     elapsedTime = 0; // これがないとリセットして再スタート際にリセット前のタイムから始まってしまう
